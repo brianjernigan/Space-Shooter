@@ -15,7 +15,9 @@ public class BulletManager : MonoBehaviour
     private void Awake()
     {
         _bulletPool =
-            new ObjectPool<GameObject>(CreateNewBullet, OnBulletRetrieved, OnBulletReleased, OnBulletDestroyed, false, 10, 20);
+            new ObjectPool<GameObject>(CreateNewBullet, OnBulletRetrieved, 
+                OnBulletReleased, OnBulletDestroyed, 
+                false, 5, 10);
     }
 
     private GameObject CreateNewBullet()
@@ -36,7 +38,6 @@ public class BulletManager : MonoBehaviour
     private void OnBulletReleased(GameObject bullet)
     {
         bullet.SetActive(false);
-        bullet.transform.position = _firePoint.position;
         StopCoroutine(BulletLifecycleCorot(bullet));
     }
 

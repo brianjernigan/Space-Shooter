@@ -2,17 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class UIController : MonoBehaviour
 {
     [SerializeField] private TMP_Text _healthText;
     [SerializeField] private TMP_Text _scoreText;
+    
+    private ShipStats _ss;
 
-    [SerializeField] private ShipStats _shipStats;
-
-    public void UpdateTexts()
+    private void Awake()
     {
-        _healthText.text = $"Health: {_shipStats.Health}";
-        _scoreText.text = $"Score: {_shipStats.Score}";
+        _ss = FindObjectOfType<ShipStats>();
+    }
+    
+    public void UpdateHealthText()
+    {
+        _healthText.text = $"Health: {_ss.Health}";
+    }
+
+    public void UpdateScoreText()
+    {
+        _scoreText.text = $"Score: {_ss.Score}";
     }
 }

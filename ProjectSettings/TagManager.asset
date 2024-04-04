@@ -11,6 +11,8 @@ TagManager:
   - Shield
   - Ground
   - Environment
+  - BigEnemy
+  - SmallEnemy
   layers:
   - Default
   - TransparentFX

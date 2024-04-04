@@ -6,9 +6,12 @@ using UnityEngine;
 public class BulletController : MonoBehaviour
 {
     private BulletManager _bm;
+    private ShipStats _ss;
+    
     private void Start()
     {
-        _bm = GameObject.FindGameObjectWithTag("Player").GetComponent<BulletManager>();
+        _bm = FindObjectOfType<BulletManager>();
+        _ss = FindObjectOfType<ShipStats>();
     }
     
     private void OnCollisionEnter(Collision other)
@@ -23,9 +26,24 @@ public class BulletController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Ground")) return;
 
-        if (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("Asteroid"))
+        if (other.gameObject.CompareTag("BigEnemy"))
         {
-            Debug.Log("Hit");
+            _ss.IncreaseScore(3);
+            Destroy(other.gameObject);
+            _bm.BulletPool.Release(gameObject);
+        }
+
+        if (other.gameObject.CompareTag("SmallEnemy"))
+        {
+            _ss.IncreaseScore(2);
+            Destroy(other.gameObject);
+            _bm.BulletPool.Release(gameObject);
+        }
+        
+        if (other.gameObject.CompareTag("Asteroid"))
+        {
+            _ss.IncreaseScore(1);
+            Destroy(other.gameObject);
             _bm.BulletPool.Release(gameObject);
         }
     }

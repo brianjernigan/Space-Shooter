@@ -12,7 +12,8 @@ public class ShipController : MonoBehaviour
     private Rigidbody _rb;
 
     private BulletManager _bm;
-    
+
+    private ShipStats _ss;
 
     [SerializeField] private ParticleSystem _shipParticles;
     [SerializeField] private Transform _firePoint;
@@ -21,6 +22,7 @@ public class ShipController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _bm = GetComponent<BulletManager>();
+        _ss = GetComponent<ShipStats>();
     }
 
     private void Update()
@@ -33,7 +35,10 @@ public class ShipController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Move();
+        if (!_ss.IsStalled)
+        {
+            Move();
+        }
     }
 
     private void Move()

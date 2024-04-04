@@ -7,34 +7,43 @@ public class ShipCollisions : MonoBehaviour
 {
     [SerializeField] private Material _shieldMat;
     [SerializeField] private Material _shipMat;
-
-    [SerializeField] private UIController _ui;
     
-    private ShipStats _shipStats;
+    private ShipStats _ss;
+    private ShipController _sc;
 
     private void Awake()
     {
-        _shipStats = GetComponent<ShipStats>();
+        _ss = GetComponent<ShipStats>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Asteroid") || other.gameObject.CompareTag("Enemy"))
+        if (other.gameObject.CompareTag("SmallEnemy"))
         {
-            _shipStats.TakeDamage(1);
-            _ui.UpdateTexts();
+            _ss.TakeDamage(1);
             Destroy(other.gameObject);
+        }
+
+        if (other.gameObject.CompareTag("BigEnemy"))
+        {
+            _ss.TakeDamage(2);
+            Destroy(other.gameObject);
+        }
+
+        if (other.gameObject.CompareTag("Asteroid"))
+        {
+            
         }
         
         if (other.gameObject.CompareTag("Health"))
         {
-            _shipStats.GainHealth(2);
+            _ss.GainHealth(2);
             Destroy(other.gameObject);
         }
 
         if (other.gameObject.CompareTag("Shield"))
         {
-            _shipStats.IsShielded = true;
+            _ss.IsShielded = true;
             gameObject.GetComponent<MeshRenderer>().material = _shieldMat;
             Destroy(other.gameObject);
         }
