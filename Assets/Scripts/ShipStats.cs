@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class ShipStats : MonoBehaviour
 { 
-    private int Health { get; set; } = 10;
-
+    public int Health { get; private set; } = 10;
+    public int Score { get; set; }
+    
     public bool IsShielded { get; set; }
 
     public void TakeDamage(int damage)

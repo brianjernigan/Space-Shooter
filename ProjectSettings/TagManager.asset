@@ -9,6 +9,7 @@ TagManager:
   - Asteroid
   - Health
   - Shield
+  - Ground
   layers:
   - Default
   - TransparentFX
