@@ -10,6 +10,11 @@ public class ShipStats : MonoBehaviour
     
     public bool IsShielded { get; set; }
 
+    public void IncreaseScore()
+    {
+        Score++;
+    }
+    
     public void TakeDamage(int damage)
     {
         if (IsShielded)
