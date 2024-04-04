@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ShipStats : MonoBehaviour
-{
+{ 
     private int Health { get; set; } = 10;
 
     public bool IsShielded { get; set; }
@@ -23,10 +23,5 @@ public class ShipStats : MonoBehaviour
     public void GainHealth(int amount)
     {
         Health = Mathf.Min(Health + amount, 10);
-    }
-
-    private void Update()
-    {
-        Debug.Log(Health);
     }
 }
