@@ -10,10 +10,9 @@ public class ShipController : MonoBehaviour
     private const float BulletSpeed = 50.0f;
     
     private Rigidbody _rb;
-
     private BulletManager _bm;
-
     private ShipStats _ss;
+    private AudioManager _audio;
 
     [SerializeField] private ParticleSystem _shipParticles;
     [SerializeField] private Transform _firePoint;
@@ -23,6 +22,7 @@ public class ShipController : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         _bm = GetComponent<BulletManager>();
         _ss = GetComponent<ShipStats>();
+        _audio = FindObjectOfType<AudioManager>();
     }
 
     private void Update()
@@ -59,6 +59,18 @@ public class ShipController : MonoBehaviour
         else if (!Input.GetKey(KeyCode.W) && _shipParticles.isEmitting)
         {
             _shipParticles.Stop();
+        }
+
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.D))
+        {
+            if (!_audio.Thrusters.isPlaying)
+            {
+                _audio.Thrusters.Play();
+            }
+        }
+        else
+        {
+            _audio.Thrusters.Stop();
         }
     }
 
