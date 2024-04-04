@@ -5,11 +5,18 @@ using UnityEngine;
 
 public class ShipCollisions : MonoBehaviour
 {
+    private ShipStats _shipStats;
+
+    private void Awake()
+    {
+        _shipStats = GetComponent<ShipStats>();
+    }
+    
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Asteroid"))
         {
-            Debug.Log("asteroid");
+            _shipStats.TakeDamage(1);
         }
     }
 
@@ -17,12 +24,14 @@ public class ShipCollisions : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Health"))
         {
-            Debug.Log("Health");
+            _shipStats.GainHealth(2);
+            Destroy(other.gameObject);
         }
 
         if (other.gameObject.CompareTag("Shield"))
         {
-            Debug.Log("Shield");
+            _shipStats.IsShielded = true;
+            Destroy(other.gameObject);
         }
     }
 }
