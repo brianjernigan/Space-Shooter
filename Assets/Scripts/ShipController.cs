@@ -7,18 +7,20 @@ public class ShipController : MonoBehaviour
 {
     private const float Speed = 10.0f;
     private const float Tilt = 15.0f;
-    private const float BulletSpeed = 100.0f;
+    private const float BulletSpeed = 50.0f;
     
     private Rigidbody _rb;
+
+    private BulletManager _bm;
     
 
     [SerializeField] private ParticleSystem _shipParticles;
     [SerializeField] private Transform _firePoint;
-    [SerializeField] private GameObject _bulletPrefab;
 
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
+        _bm = GetComponent<BulletManager>();
     }
 
     private void Update()
@@ -57,7 +59,7 @@ public class ShipController : MonoBehaviour
 
     private void Shoot()
     {
-        var bullet = Instantiate(_bulletPrefab, _firePoint.position, Quaternion.Euler(90, 0, 0));
+        var bullet = _bm.BulletPool.Get();
         var bulletRb = bullet.GetComponent<Rigidbody>();
         bulletRb.AddForce(_firePoint.forward * BulletSpeed);
     }

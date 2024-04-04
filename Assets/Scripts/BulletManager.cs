@@ -10,29 +10,45 @@ public class BulletManager : MonoBehaviour
     [SerializeField] private GameObject _bulletPrefab;
 
     private ObjectPool<GameObject> _bulletPool;
+    public ObjectPool<GameObject> BulletPool => _bulletPool;
 
     private void Awake()
     {
-        //_bulletPool = new ObjectPool<GameObject>(CreateNewBullet(), )
+        _bulletPool =
+            new ObjectPool<GameObject>(CreateNewBullet, OnBulletRetrieved, OnBulletReleased, OnBulletDestroyed, false, 10, 20);
     }
 
-    private void CreateNewBullet()
+    private GameObject CreateNewBullet()
     {
         var bullet = Instantiate(_bulletPrefab, _firePoint.position, Quaternion.Euler(90, 0, 0));
+        bullet.SetActive(false);
+        return bullet;
     }
 
     private void OnBulletRetrieved(GameObject bullet)
     {
-        throw new NotImplementedException();
+        bullet.SetActive(true);
+        //bullet.GetComponent<BulletController>().IsPooled = false;
+        bullet.transform.position = _firePoint.position;
+        StartCoroutine(BulletLifecycleCorot(bullet));
     }
 
     private void OnBulletReleased(GameObject bullet)
     {
-        throw new NotImplementedException();
+        bullet.SetActive(false);
+        //bullet.GetComponent<BulletController>().IsPooled = true;
+        bullet.transform.position = _firePoint.position;
+        StopCoroutine(BulletLifecycleCorot(bullet));
     }
 
     private void OnBulletDestroyed(GameObject bullet)
     {
         Destroy(bullet);
+    }
+
+    private IEnumerator BulletLifecycleCorot(GameObject bullet)
+    {
+        yield return new WaitForSeconds(1f);
+        _bulletPool.Release(bullet);
     }
 }
