@@ -28,7 +28,7 @@ public class BulletManager : MonoBehaviour
     private void OnBulletRetrieved(GameObject bullet)
     {
         bullet.SetActive(true);
-        //bullet.GetComponent<BulletController>().IsPooled = false;
+        bullet.GetComponent<Rigidbody>().velocity = Vector3.zero;
         bullet.transform.position = _firePoint.position;
         StartCoroutine(BulletLifecycleCorot(bullet));
     }
@@ -36,7 +36,6 @@ public class BulletManager : MonoBehaviour
     private void OnBulletReleased(GameObject bullet)
     {
         bullet.SetActive(false);
-        //bullet.GetComponent<BulletController>().IsPooled = true;
         bullet.transform.position = _firePoint.position;
         StopCoroutine(BulletLifecycleCorot(bullet));
     }

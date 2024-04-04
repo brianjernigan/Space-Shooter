@@ -10,6 +10,7 @@ TagManager:
   - Health
   - Shield
   - Ground
+  - Environment
   layers:
   - Default
   - TransparentFX

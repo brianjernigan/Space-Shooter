@@ -6,8 +6,6 @@ using UnityEngine;
 public class BulletController : MonoBehaviour
 {
     private BulletManager _bm;
-
-    public bool IsPooled { get; set; } = true;
     private void Start()
     {
         _bm = GameObject.FindGameObjectWithTag("Player").GetComponent<BulletManager>();
@@ -15,7 +13,15 @@ public class BulletController : MonoBehaviour
     
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("Ground") || other.gameObject.CompareTag("Player")) return;
+        if (other.gameObject.CompareTag("Environment"))
+        {
+            _bm.BulletPool.Release(gameObject);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Ground")) return;
 
         if (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("Asteroid"))
         {

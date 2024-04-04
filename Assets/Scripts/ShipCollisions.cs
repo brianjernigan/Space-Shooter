@@ -11,24 +11,21 @@ public class ShipCollisions : MonoBehaviour
     [SerializeField] private UIController _ui;
     
     private ShipStats _shipStats;
-    
 
     private void Awake()
     {
         _shipStats = GetComponent<ShipStats>();
     }
-    
-    private void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.CompareTag("Asteroid"))
-        {
-            _shipStats.TakeDamage(1);
-            _ui.UpdateTexts();
-        }
-    }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.CompareTag("Asteroid") || other.gameObject.CompareTag("Enemy"))
+        {
+            _shipStats.TakeDamage(1);
+            _ui.UpdateTexts();
+            Destroy(other.gameObject);
+        }
+        
         if (other.gameObject.CompareTag("Health"))
         {
             _shipStats.GainHealth(2);
