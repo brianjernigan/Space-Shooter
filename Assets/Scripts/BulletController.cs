@@ -16,6 +16,8 @@ public class BulletController : MonoBehaviour
     
     private void OnCollisionEnter(Collision other)
     {
+        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Ground")) return;
+        
         if (other.gameObject.CompareTag("Environment"))
         {
             _bm.BulletPool.Release(gameObject);
@@ -24,8 +26,6 @@ public class BulletController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Ground")) return;
-
         if (other.gameObject.CompareTag("BigEnemy"))
         {
             _ss.IncreaseScore(3);
