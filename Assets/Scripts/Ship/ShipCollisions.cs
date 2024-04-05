@@ -64,7 +64,7 @@ public class ShipCollisions : MonoBehaviour
         if (other.gameObject.CompareTag("Health"))
         {
             _audio.HealthPickup.Play();
-            _ss.GainHealth(2);
+            _ss.GainHealth(1);
             Destroy(other.gameObject);
         }
 

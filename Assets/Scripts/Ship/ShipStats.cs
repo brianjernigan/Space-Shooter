@@ -11,7 +11,8 @@ public class ShipStats : MonoBehaviour
     public const int MaxHealth = 10;
     public int Health { get; private set; } = MaxHealth;
     public int Score { get; private set; }
-    public float Multiplier { get; set; } = 1f;
+
+    public float Multiplier => CalculateMultiplier();
     
     private bool _isShielded;
     public bool IsShielded
@@ -36,27 +37,15 @@ public class ShipStats : MonoBehaviour
     public void IncreaseScore(int amount)
     {
         Score += amount;
-        SetMultiplier();
         _ui.UpdateScoreText();
     }
 
-    private void SetMultiplier()
+    private float CalculateMultiplier()
     {
-        Multiplier = Score switch
-        {
-            < 10 => 1.2f,
-            < 20 => 1.4f,
-            < 30 => 1.5f,
-            < 40 => 1.6f,
-            < 50 => 1.8f,
-            < 60 => 2.2f,
-            < 70 => 2.6f,
-            < 80 => 3.0f,
-            < 90 => 3.6f,
-            < 100 => 4.2f,
-            < 110 => 5.0f,
-            _ => Multiplier
-        };
+        var initialMultiplier = 1f;
+        var rateOfIncrease = 1.02f;
+
+        return initialMultiplier * Mathf.Pow(rateOfIncrease, Score);
     }
     
     public void TakeDamage(int damage)

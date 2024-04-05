@@ -19,7 +19,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] private Transform _minSpawnPoint;
     [SerializeField] private Transform _maxSpawnPoint;
 
-    private float _hazardSpawnRate = 1.75f;
+    private float _hazardSpawnRate = 2f;
     private float _pickupSpawnRate = 5f;
 
     private bool _gameIsOver;
