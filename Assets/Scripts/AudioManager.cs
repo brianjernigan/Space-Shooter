@@ -18,6 +18,9 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField] private AudioSource _hit;
     public AudioSource Hit => _hit;
+
+    [SerializeField] private AudioSource _poof;
+    public AudioSource Poof => _poof;
     
     [SerializeField] private AudioSource _shieldPickup;
     public AudioSource ShieldPickup => _shieldPickup;

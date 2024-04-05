@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class ShipCollisions : MonoBehaviour
 {
-    [SerializeField] private Material _shieldMat;
-    [SerializeField] private Material _shipMat;
-    
     private ShipStats _ss;
     private AudioManager _audio;
 
@@ -15,11 +12,6 @@ public class ShipCollisions : MonoBehaviour
     {
         _ss = GetComponent<ShipStats>();
         _audio = FindObjectOfType<AudioManager>();
-    }
-
-    private void Start()
-    {
-        _ss.OnShieldedChanged += HandleShipShielded;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -91,11 +83,6 @@ public class ShipCollisions : MonoBehaviour
         yield return new WaitForSeconds(3.0f);
         _ss.IsStalled = false;
         _audio.Stall.Stop();
-    }
-
-    private void HandleShipShielded(bool isShielded)
-    {
-        gameObject.GetComponent<MeshRenderer>().material = isShielded ? _shieldMat : _shipMat;
     }
 
     private void OnShieldedHit(GameObject objectToDestroy)

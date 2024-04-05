@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 23596298089994452}
   - component: {fileID: 9147759157523785540}
   - component: {fileID: 2959704208948856985}
+  - component: {fileID: 4725387546534222871}
   m_Layer: 0
   m_Name: SmallEnemy
   m_TagString: SmallEnemy
@@ -133,3 +134,15 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 2
+--- !u!114 &4725387546534222871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314043251266546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 291e9beffbab7ea4d9c3358a39bbe91a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

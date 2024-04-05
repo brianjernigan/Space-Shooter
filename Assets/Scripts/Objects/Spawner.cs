@@ -18,28 +18,84 @@ public class Spawner : MonoBehaviour
     [Header("Spawn Points")] 
     [SerializeField] private Transform _minSpawnPoint;
     [SerializeField] private Transform _maxSpawnPoint;
-    
-    private GameObject[] _hazards;
-    private GameObject[] _pickups;
 
-    private float _hazardSpawnRate = 5f;
-    private float _pickupSpawnRate = 2.5f;
+    private float _hazardSpawnRate = 1.75f;
+    private float _pickupSpawnRate = 5f;
 
     private bool _gameIsOver;
-    
+
+    private ShipStats _ss;
+
     private void Awake()
     {
-        _hazards = new[] { _asteroidPrefab, _smallEnemyPrefab, _bigEnemyPrefab };
-        _pickups = new[] { _healthPrefab, _shieldPrefab };
+        _ss = FindObjectOfType<ShipStats>();
     }
 
     private void Start()
     {
-        SpawnSmallEnemy();
-        SpawnBigEnemy();
-        SpawnAsteroid();
-        SpawnHealth();
-        SpawnShield();
+        StartCoroutine(SpawnHazardCorot());
+        StartCoroutine(SpawnPickupCorot());
+    }
+
+    private IEnumerator SpawnHazardCorot()
+    {
+        while (!_gameIsOver)
+        {
+            SpawnRandomHazard();
+            yield return new WaitForSeconds(_hazardSpawnRate);
+        }
+    }
+
+    private IEnumerator SpawnPickupCorot()
+    {
+        while (!_gameIsOver)
+        {
+            SpawnRandomPickup();
+            yield return new WaitForSeconds(_pickupSpawnRate);
+        }
+    }
+
+    private void SpawnRandomHazard()
+    {
+        var randomHazard = Random.Range(1, 4);
+        switch (randomHazard)
+        {
+            case 1:
+                SpawnSmallEnemy();
+                break;
+            case 2:
+                SpawnBigEnemy();
+                break;
+            case 3:
+                SpawnAsteroid();
+                break;
+        }
+    }
+
+    private void SpawnRandomPickup()
+    {
+        if (_ss.IsShielded && _ss.Health == ShipStats.MaxHealth) return;
+        
+        if (_ss.IsShielded)
+        {
+            SpawnHealth();
+        } else if (_ss.Health == ShipStats.MaxHealth) 
+        {
+            SpawnShield();
+        }
+        else
+        {
+            var randomPickup = Random.Range(1, 3);
+            switch (randomPickup)
+            {
+                case 1:
+                    SpawnHealth();
+                    break;
+                case 2:
+                    SpawnShield();
+                    break;
+            }
+        }
     }
 
     private Vector3 GenerateSpawnPoint()

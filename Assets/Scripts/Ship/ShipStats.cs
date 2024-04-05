@@ -5,11 +5,13 @@ using UnityEngine;
 
 public class ShipStats : MonoBehaviour
 {
-    private const int MaxHealth = 10;
+    [SerializeField] private Material _shieldMat;
+    [SerializeField] private Material _shipMat;
+
+    public const int MaxHealth = 10;
     public int Health { get; private set; } = MaxHealth;
     public int Score { get; private set; }
-
-    public event Action<bool> OnShieldedChanged;
+    public float Multiplier { get; set; } = 1f;
     
     private bool _isShielded;
     public bool IsShielded
@@ -17,11 +19,11 @@ public class ShipStats : MonoBehaviour
         get => _isShielded;
         set
         {
-            if (_isShielded == value) return;
             _isShielded = value;
-            OnShieldedChanged?.Invoke(_isShielded);
+            ChangeShipMaterial(_isShielded);
         }
     }
+
     public bool IsStalled { get; set; }
 
     private UIManager _ui;
@@ -34,7 +36,27 @@ public class ShipStats : MonoBehaviour
     public void IncreaseScore(int amount)
     {
         Score += amount;
+        SetMultiplier();
         _ui.UpdateScoreText();
+    }
+
+    private void SetMultiplier()
+    {
+        Multiplier = Score switch
+        {
+            < 10 => 1.2f,
+            < 20 => 1.4f,
+            < 30 => 1.5f,
+            < 40 => 1.6f,
+            < 50 => 1.8f,
+            < 60 => 2.2f,
+            < 70 => 2.6f,
+            < 80 => 3.0f,
+            < 90 => 3.6f,
+            < 100 => 4.2f,
+            < 110 => 5.0f,
+            _ => Multiplier
+        };
     }
     
     public void TakeDamage(int damage)
@@ -62,5 +84,10 @@ public class ShipStats : MonoBehaviour
         {
             Debug.Log("dead");
         }
+    }
+    
+    private void ChangeShipMaterial(bool isShielded)
+    {
+        gameObject.GetComponent<MeshRenderer>().material = isShielded ? _shieldMat : _shipMat;
     }
 }
