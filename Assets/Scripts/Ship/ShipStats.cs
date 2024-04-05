@@ -13,12 +13,31 @@ using UnityEngine;
 
 public class ShipStats : MonoBehaviour
 {
+    private const float InitialMultiplier = 1f;
+    private const float RateOfIncrease = 1.02f;
+    
     [SerializeField] private Material _shieldMat;
     [SerializeField] private Material _shipMat;
 
     public const int MaxHealth = 10;
+    
+    public event Action<int> OnHealthChanged;
+    public event Action<int> OnDeath;
     public int Health { get; private set; } = MaxHealth;
-    public int Score { get; private set; }
+    public bool IsDead { get; set; }
+    
+    public event Action<int> OnScoreChanged;
+    private int _score;
+    private int Score
+    {
+        get => _score;
+        set
+        {
+            _score = value;
+            SetModifier();
+        }
+}
+    
     private bool _isShielded;
     public bool IsShielded
     {
@@ -29,24 +48,22 @@ public class ShipStats : MonoBehaviour
             ChangeShipMaterial(_isShielded);
         }
     }
-    public bool IsStalled { get; set; }
-    public bool IsDead { get; private set; }
-    public float DifficultyMultiplier => CalculateDifficultyMultiplier();
-
-    private UIManager _ui;
-    private MeshRenderer _mr;
     
-    private const float InitialMultiplier = 1f;
-    private const float RateOfIncrease = 1.02f;
+    public bool IsStalled { get; set; }
 
-    public event Action<int> OnHealthChanged;
-    public event Action<int> OnScoreChanged;
-    public event Action<int> OnDeath;
+    public float Modifier => SetModifier();
+    
+    private MeshRenderer _mr;
 
     private void Start()
     {
-        _ui = FindObjectOfType<UIManager>();
         _mr = GetComponent<MeshRenderer>();
+    }
+    
+    // Enemies' speed increases exponentially with score
+    private float SetModifier()
+    {
+        return InitialMultiplier * Mathf.Pow(RateOfIncrease, Score);
     }
     
     public void IncreaseScore(int amount)
@@ -54,12 +71,7 @@ public class ShipStats : MonoBehaviour
         Score += amount;
         OnScoreChanged?.Invoke(Score);
     }
-
-    // Enemies' speed increases exponentially with score
-    private float CalculateDifficultyMultiplier()
-    {
-        return InitialMultiplier * Mathf.Pow(RateOfIncrease, Score);
-    }
+    
     
     public void TakeDamage(int damage)
     {
@@ -72,16 +84,15 @@ public class ShipStats : MonoBehaviour
         Health = Math.Max(0, Health - damage);
         OnHealthChanged?.Invoke(Health);
 
-        if (Health == 0) OnDeath?.Invoke(Score);
-        // _ui.UpdateHealthText();
-        // CheckForDeath();
+        if (Health != 0) return;
+        IsDead = true;
+        OnDeath?.Invoke(Score);
     }
 
     public void GainHealth(int amount)
     {
         Health = Mathf.Min(Health + amount, MaxHealth);
         OnHealthChanged?.Invoke(Health);
-        // _ui.UpdateHealthText();
     }
     
     private void ChangeShipMaterial(bool isShielded)

@@ -24,6 +24,7 @@ public class ObjectController : MonoBehaviour
     {
         _ss = FindObjectOfType<ShipStats>();
         _audio = FindObjectOfType<AudioManager>();
+        
         DetermineSpeed();
     }
 
@@ -32,17 +33,17 @@ public class ObjectController : MonoBehaviour
         switch (gameObject.tag)
         {
             case "BigEnemy":
-                _speed = 1.5f * _ss.DifficultyMultiplier;
+                _speed = 1.5f * _ss.Modifier;
                 break;
             case "SmallEnemy":
-                _speed = 3f * _ss.DifficultyMultiplier;
+                _speed = 3f * _ss.Modifier;
                 break;
             case "Asteroid":
-                _speed = 2.5f * _ss.DifficultyMultiplier;
+                _speed = 2.5f * _ss.Modifier;
                 break;
             case "Health":
             case "Shield":
-                _speed = 2f * _ss.DifficultyMultiplier;
+                _speed = 2f * _ss.Modifier;
                 break;
         }
     }

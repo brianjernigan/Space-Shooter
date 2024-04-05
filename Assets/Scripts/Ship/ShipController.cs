@@ -43,6 +43,7 @@ public class ShipController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_ss.IsDead) return;
         if (!_ss.IsStalled)
         {
             Move();
@@ -50,6 +51,7 @@ public class ShipController : MonoBehaviour
         
         HandleParticles();
         HandleThrusterAudio();
+
     }
 
     private void Move()

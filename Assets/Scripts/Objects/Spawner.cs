@@ -32,9 +32,13 @@ public class Spawner : MonoBehaviour
 
     private ShipStats _ss;
 
+    private bool _gameIsOver;
+
     private void Awake()
     {
         _ss = FindObjectOfType<ShipStats>();
+
+        _ss.OnDeath += HandleGameOver;
     }
 
     private void Start()
@@ -43,9 +47,33 @@ public class Spawner : MonoBehaviour
         StartCoroutine(SpawnPickupCorot());
     }
 
+    private void HandleGameOver(int score)
+    {
+        _gameIsOver = true;
+        DestroyAllObjects();
+    }
+
+    private void DestroyAllObjects()
+    {
+        DestroyAllWithTag("Asteroid");
+        DestroyAllWithTag("SmallEnemy");
+        DestroyAllWithTag("BigEnemy");
+        DestroyAllWithTag("Health");
+        DestroyAllWithTag("Shield");
+    }
+
+    private void DestroyAllWithTag(string objTag)
+    {
+        var objects = GameObject.FindGameObjectsWithTag(objTag);
+        foreach (var obj in objects)
+        {
+            Destroy(obj);
+        }
+    }
+
     private IEnumerator SpawnHazardCorot()
     {
-        while (!_ss.IsDead)
+        while (!_gameIsOver)
         {
             SpawnRandomHazard();
             yield return new WaitForSeconds(HazardSpawnRate);
@@ -54,7 +82,7 @@ public class Spawner : MonoBehaviour
 
     private IEnumerator SpawnPickupCorot()
     {
-        while (!_ss.IsDead)
+        while (!_gameIsOver)
         {
             SpawnRandomPickup();
             yield return new WaitForSeconds(PickupSpawnRate);
@@ -143,5 +171,11 @@ public class Spawner : MonoBehaviour
     private void SpawnShield()
     {
         SpawnObject(_shieldPrefab, 0.75f, Quaternion.identity);
+    }
+
+    private void OnDestroy()
+    {
+        if (_ss == null) return;
+        _ss.OnDeath -= HandleGameOver;
     }
 }

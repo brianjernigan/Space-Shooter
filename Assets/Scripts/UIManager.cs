@@ -11,6 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 public class UIManager : MonoBehaviour
@@ -58,6 +59,16 @@ public class UIManager : MonoBehaviour
     {
         UpdateFinalScoreText(score);
         EnableDeathScreen();
+    }
+
+    public void OnClickPlayAgainButton()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void OnClickQuitButton()
+    {
+        Application.Quit();
     }
 
     private void OnDestroy()
