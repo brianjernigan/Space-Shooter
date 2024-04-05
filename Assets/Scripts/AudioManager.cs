@@ -24,6 +24,9 @@ public class AudioManager : MonoBehaviour
     
     [SerializeField] private AudioSource _shipDestroy;
     public AudioSource ShipDestroy => _shipDestroy;
+
+    [SerializeField] private AudioSource _stall;
+    public AudioSource Stall => _stall;
     
     [SerializeField] private AudioSource _thrusters;
     public AudioSource Thrusters => _thrusters;

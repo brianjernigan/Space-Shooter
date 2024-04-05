@@ -39,6 +39,9 @@ public class ShipController : MonoBehaviour
         {
             Move();
         }
+        
+        HandleParticles();
+        HandleThrusterAudio();
     }
 
     private void Move()
@@ -51,17 +54,23 @@ public class ShipController : MonoBehaviour
         _rb.velocity = new Vector3(movement.x, movement.y, movement.z);
 
         _rb.rotation = Quaternion.Euler(0, 0, -horizontalInput * Tilt);
+    }
 
-        if (Input.GetKey(KeyCode.W) && !_shipParticles.isEmitting)
+    private void HandleParticles()
+    {
+        if (Input.GetKey(KeyCode.W) && !_shipParticles.isEmitting && !_ss.IsStalled)
         {
             _shipParticles.Play();
         }
-        else if (!Input.GetKey(KeyCode.W) && _shipParticles.isEmitting)
+        else if ((!Input.GetKey(KeyCode.W) || _ss.IsStalled) && _shipParticles.isEmitting)
         {
             _shipParticles.Stop();
         }
+    }
 
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.D))
+    private void HandleThrusterAudio()
+    {
+        if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.D)) && !_ss.IsStalled)
         {
             if (!_audio.Thrusters.isPlaying)
             {
