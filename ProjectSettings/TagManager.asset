@@ -13,6 +13,7 @@ TagManager:
   - Environment
   - BigEnemy
   - SmallEnemy
+  - BackWall
   layers:
   - Default
   - TransparentFX

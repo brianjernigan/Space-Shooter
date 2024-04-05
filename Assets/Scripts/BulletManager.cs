@@ -17,7 +17,7 @@ public class BulletManager : MonoBehaviour
         _bulletPool =
             new ObjectPool<GameObject>(CreateNewBullet, OnBulletRetrieved, 
                 OnBulletReleased, OnBulletDestroyed, 
-                false, 5, 10);
+                false, 10, 20);
     }
 
     private GameObject CreateNewBullet()

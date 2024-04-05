@@ -27,7 +27,7 @@ public class ShipController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && !_ss.IsStalled)
         {
             Shoot();
         }
@@ -49,7 +49,7 @@ public class ShipController : MonoBehaviour
         var horizontalInput = Input.GetAxis("Horizontal");
         var verticalInput = Input.GetAxis("Vertical");
 
-        var movement = new Vector3(horizontalInput, 0, verticalInput) * Speed;
+        var movement = new Vector3(horizontalInput, 0, 0) * Speed;
 
         _rb.velocity = new Vector3(movement.x, movement.y, movement.z);
 
@@ -58,11 +58,11 @@ public class ShipController : MonoBehaviour
 
     private void HandleParticles()
     {
-        if (Input.GetKey(KeyCode.W) && !_shipParticles.isEmitting && !_ss.IsStalled)
+        if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) && !_shipParticles.isEmitting && !_ss.IsStalled)
         {
             _shipParticles.Play();
         }
-        else if ((!Input.GetKey(KeyCode.W) || _ss.IsStalled) && _shipParticles.isEmitting)
+        else if ((!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) || _ss.IsStalled) && _shipParticles.isEmitting)
         {
             _shipParticles.Stop();
         }
@@ -70,7 +70,7 @@ public class ShipController : MonoBehaviour
 
     private void HandleThrusterAudio()
     {
-        if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.D)) && !_ss.IsStalled)
+        if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) && !_ss.IsStalled)
         {
             if (!_audio.Thrusters.isPlaying)
             {
