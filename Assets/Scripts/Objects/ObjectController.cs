@@ -1,3 +1,11 @@
+//////////////////////////////////////////////
+//Assignment/Lab/Project: Space Shooter
+//Name: Brian Jernigan
+//Section: SGD.213.2172
+//Instructor: Brian Sowers
+//Date: 04/08/2024
+/////////////////////////////////////////////
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,22 +32,27 @@ public class ObjectController : MonoBehaviour
         switch (gameObject.tag)
         {
             case "BigEnemy":
-                _speed = 1.5f * _ss.Multiplier;
+                _speed = 1.5f * _ss.DifficultyMultiplier;
                 break;
             case "SmallEnemy":
-                _speed = 3f * _ss.Multiplier;
+                _speed = 3f * _ss.DifficultyMultiplier;
                 break;
             case "Asteroid":
-                _speed = 2.5f * _ss.Multiplier;
+                _speed = 2.5f * _ss.DifficultyMultiplier;
                 break;
             case "Health":
             case "Shield":
-                _speed = 2f * _ss.Multiplier;
+                _speed = 2f * _ss.DifficultyMultiplier;
                 break;
         }
     }
 
     private void Update()
+    {
+        Move();
+    }
+
+    private void Move()
     {
         var position = transform.position;
         position = Vector3.MoveTowards(position,
@@ -49,27 +62,29 @@ public class ObjectController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("BackWall") && !ObjectIsHazardous())
+        if (!other.gameObject.CompareTag("BackWall")) return;
+
+        if (!ObjectIsHazardous())
         {
             _audio.Poof.time = 0.5f;
             _audio.Poof.Play();
-            Destroy(gameObject);
         }
-        
-        if (other.gameObject.CompareTag("BackWall") && ObjectIsHazardous() && !_ss.IsShielded)
+        else
         {
-            _audio.Hit.time = 0.1f;
-            _audio.Hit.Play();
-            _ss.TakeDamage(1);
-            Destroy(gameObject);
+            if (_ss.IsShielded)
+            {
+                _ss.IsShielded = false;
+                _audio.Block.Play();
+            }
+            else
+            {
+                _audio.Hit.time = 0.1f;
+                _audio.Hit.Play();
+                _ss.TakeDamage(1);
+            }
         }
 
-        if (other.gameObject.CompareTag("BackWall") && ObjectIsHazardous() && _ss.IsShielded)
-        {
-            _ss.IsShielded = false;
-            _audio.Block.Play();
-            Destroy(gameObject);
-        }
+        Destroy(gameObject);
     }
 
     private bool ObjectIsHazardous()

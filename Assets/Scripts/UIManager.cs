@@ -1,3 +1,12 @@
+//////////////////////////////////////////////
+//Assignment/Lab/Project: Space Shooter
+//Name: Brian Jernigan
+//Section: SGD.213.2172
+//Instructor: Brian Sowers
+//Date: 04/08/2024
+/////////////////////////////////////////////
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -8,21 +17,53 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private TMP_Text _healthText;
     [SerializeField] private TMP_Text _scoreText;
+    [SerializeField] private TMP_Text _finalScoreText;
+
+    [SerializeField] private GameObject _deathScreen;
+    [SerializeField] private GameObject _uiScreen;
     
     private ShipStats _ss;
 
     private void Awake()
     {
         _ss = FindObjectOfType<ShipStats>();
-    }
-    
-    public void UpdateHealthText()
-    {
-        _healthText.text = $"Health: {_ss.Health}";
+
+        _ss.OnHealthChanged += UpdateHealthText;
+        _ss.OnScoreChanged += UpdateScoreText;
+        _ss.OnDeath += OnPlayerDeath;
     }
 
-    public void UpdateScoreText()
+    private void UpdateHealthText(int health)
     {
-        _scoreText.text = $"Score: {_ss.Score}";
+        _healthText.text = $"Health: {health}";
+    }
+
+    private void UpdateScoreText(int score)
+    {
+        _scoreText.text = $"Score: {score}";
+    }
+
+    private void UpdateFinalScoreText(int score)
+    {
+        _finalScoreText.text = $"Final Score: {score}";
+    }
+
+    private void EnableDeathScreen()
+    {
+        _deathScreen.SetActive(true);
+        _uiScreen.SetActive(false);
+    }
+
+    private void OnPlayerDeath(int score)
+    {
+        UpdateFinalScoreText(score);
+        EnableDeathScreen();
+    }
+
+    private void OnDestroy()
+    {
+        if (_ss == null) return;
+        _ss.OnHealthChanged -= UpdateHealthText;
+        _ss.OnScoreChanged -= UpdateScoreText;
     }
 }

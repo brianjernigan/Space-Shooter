@@ -1,3 +1,11 @@
+//////////////////////////////////////////////
+//Assignment/Lab/Project: Space Shooter
+//Name: Brian Jernigan
+//Section: SGD.213.2172
+//Instructor: Brian Sowers
+//Date: 04/08/2024
+/////////////////////////////////////////////
+
 using System;
 using System.Collections;
 using System.Collections.Generic;

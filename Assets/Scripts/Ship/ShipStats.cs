@@ -1,3 +1,11 @@
+//////////////////////////////////////////////
+//Assignment/Lab/Project: Space Shooter
+//Name: Brian Jernigan
+//Section: SGD.213.2172
+//Instructor: Brian Sowers
+//Date: 04/08/2024
+/////////////////////////////////////////////
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,9 +19,6 @@ public class ShipStats : MonoBehaviour
     public const int MaxHealth = 10;
     public int Health { get; private set; } = MaxHealth;
     public int Score { get; private set; }
-
-    public float Multiplier => CalculateMultiplier();
-    
     private bool _isShielded;
     public bool IsShielded
     {
@@ -24,28 +29,36 @@ public class ShipStats : MonoBehaviour
             ChangeShipMaterial(_isShielded);
         }
     }
-
     public bool IsStalled { get; set; }
+    public bool IsDead { get; private set; }
+    public float DifficultyMultiplier => CalculateDifficultyMultiplier();
 
     private UIManager _ui;
+    private MeshRenderer _mr;
+    
+    private const float InitialMultiplier = 1f;
+    private const float RateOfIncrease = 1.02f;
+
+    public event Action<int> OnHealthChanged;
+    public event Action<int> OnScoreChanged;
+    public event Action<int> OnDeath;
 
     private void Start()
     {
         _ui = FindObjectOfType<UIManager>();
+        _mr = GetComponent<MeshRenderer>();
     }
     
     public void IncreaseScore(int amount)
     {
         Score += amount;
-        _ui.UpdateScoreText();
+        OnScoreChanged?.Invoke(Score);
     }
 
-    private float CalculateMultiplier()
+    // Enemies' speed increases exponentially with score
+    private float CalculateDifficultyMultiplier()
     {
-        var initialMultiplier = 1f;
-        var rateOfIncrease = 1.02f;
-
-        return initialMultiplier * Mathf.Pow(rateOfIncrease, Score);
+        return InitialMultiplier * Mathf.Pow(RateOfIncrease, Score);
     }
     
     public void TakeDamage(int damage)
@@ -57,26 +70,22 @@ public class ShipStats : MonoBehaviour
         }
 
         Health = Math.Max(0, Health - damage);
-        _ui.UpdateHealthText();
-        CheckForDeath();
+        OnHealthChanged?.Invoke(Health);
+
+        if (Health == 0) OnDeath?.Invoke(Score);
+        // _ui.UpdateHealthText();
+        // CheckForDeath();
     }
 
     public void GainHealth(int amount)
     {
         Health = Mathf.Min(Health + amount, MaxHealth);
-        _ui.UpdateHealthText();
-    }
-
-    private void CheckForDeath()
-    {
-        if (Health == 0)
-        {
-            Debug.Log("dead");
-        }
+        OnHealthChanged?.Invoke(Health);
+        // _ui.UpdateHealthText();
     }
     
     private void ChangeShipMaterial(bool isShielded)
     {
-        gameObject.GetComponent<MeshRenderer>().material = isShielded ? _shieldMat : _shipMat;
+        _mr.material = isShielded ? _shieldMat : _shipMat;
     }
 }

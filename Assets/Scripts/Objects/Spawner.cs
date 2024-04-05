@@ -1,3 +1,11 @@
+//////////////////////////////////////////////
+//Assignment/Lab/Project: Space Shooter
+//Name: Brian Jernigan
+//Section: SGD.213.2172
+//Instructor: Brian Sowers
+//Date: 04/08/2024
+/////////////////////////////////////////////
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,10 +27,8 @@ public class Spawner : MonoBehaviour
     [SerializeField] private Transform _minSpawnPoint;
     [SerializeField] private Transform _maxSpawnPoint;
 
-    private float _hazardSpawnRate = 2f;
-    private float _pickupSpawnRate = 5f;
-
-    private bool _gameIsOver;
+    private const float HazardSpawnRate = 2f;
+    private const float PickupSpawnRate = 8f;
 
     private ShipStats _ss;
 
@@ -39,19 +45,19 @@ public class Spawner : MonoBehaviour
 
     private IEnumerator SpawnHazardCorot()
     {
-        while (!_gameIsOver)
+        while (!_ss.IsDead)
         {
             SpawnRandomHazard();
-            yield return new WaitForSeconds(_hazardSpawnRate);
+            yield return new WaitForSeconds(HazardSpawnRate);
         }
     }
 
     private IEnumerator SpawnPickupCorot()
     {
-        while (!_gameIsOver)
+        while (!_ss.IsDead)
         {
             SpawnRandomPickup();
-            yield return new WaitForSeconds(_pickupSpawnRate);
+            yield return new WaitForSeconds(PickupSpawnRate);
         }
     }
 
@@ -107,43 +113,35 @@ public class Spawner : MonoBehaviour
         return spawnPoint;
     }
 
-    private void SpawnSmallEnemy()
+    private void SpawnObject(GameObject prefab, float yPos, Quaternion rotation)
     {
         var spawnPos = GenerateSpawnPoint();
-        spawnPos.y = 0.3f;
-        Instantiate(_smallEnemyPrefab, spawnPos, Quaternion.Euler(0, 180, 0));
+        spawnPos.y = yPos;
+        Instantiate(prefab, spawnPos, rotation);
+    }
+
+    private void SpawnSmallEnemy()
+    {
+        SpawnObject(_smallEnemyPrefab, 0.3f, Quaternion.Euler(0, 180, 0));
     }
 
     private void SpawnBigEnemy()
     {
-        var spawnPos = GenerateSpawnPoint();
-        spawnPos.y = 1f;
-        Instantiate(_bigEnemyPrefab, spawnPos, Quaternion.Euler(0, 180, 0));
+        SpawnObject(_bigEnemyPrefab, 1f, Quaternion.Euler(0, 180, 0));
     }
 
     private void SpawnAsteroid()
     {
-        var spawnPos = GenerateSpawnPoint();
-        spawnPos.y = 1f;
-        Instantiate(_asteroidPrefab, spawnPos, Quaternion.identity);
+        SpawnObject(_asteroidPrefab, 1f, Quaternion.identity);
     }
 
     private void SpawnHealth()
     {
-        var spawnPos = GenerateSpawnPoint();
-        spawnPos.y = 0.6f;
-        Instantiate(_healthPrefab, spawnPos, Quaternion.identity);
+        SpawnObject(_healthPrefab, 0.6f, Quaternion.identity);
     }
 
     private void SpawnShield()
     {
-        var spawnPos = GenerateSpawnPoint();
-        spawnPos.y = 0.75f;
-        Instantiate(_shieldPrefab, spawnPos, Quaternion.identity);
-    }
-
-    private void StopSpawning()
-    {
-        _gameIsOver = true;
+        SpawnObject(_shieldPrefab, 0.75f, Quaternion.identity);
     }
 }
