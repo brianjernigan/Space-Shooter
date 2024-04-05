@@ -62,7 +62,7 @@ public class Spawner : MonoBehaviour
     {
         var spawnPos = GenerateSpawnPoint();
         spawnPos.y = 1f;
-        Instantiate(_bigEnemyPrefab, spawnPos, Quaternion.identity);
+        Instantiate(_bigEnemyPrefab, spawnPos, Quaternion.Euler(0, 180, 0));
     }
 
     private void SpawnAsteroid()

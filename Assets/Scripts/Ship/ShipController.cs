@@ -47,7 +47,6 @@ public class ShipController : MonoBehaviour
     private void Move()
     {
         var horizontalInput = Input.GetAxis("Horizontal");
-        var verticalInput = Input.GetAxis("Vertical");
 
         var movement = new Vector3(horizontalInput, 0, 0) * Speed;
 
@@ -85,6 +84,7 @@ public class ShipController : MonoBehaviour
 
     private void Shoot()
     {
+        _audio.Fire.Play();
         var bullet = _bm.BulletPool.Get();
         var bulletRb = bullet.GetComponent<Rigidbody>();
         bulletRb.AddForce(_firePoint.forward * BulletSpeed);

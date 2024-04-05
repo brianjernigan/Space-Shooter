@@ -10,6 +10,7 @@ public class ShipStats : MonoBehaviour
     public int Score { get; private set; }
 
     public event Action<bool> OnShieldedChanged;
+    
     private bool _isShielded;
     public bool IsShielded
     {
@@ -23,11 +24,11 @@ public class ShipStats : MonoBehaviour
     }
     public bool IsStalled { get; set; }
 
-    private UIController _ui;
+    private UIManager _ui;
 
     private void Start()
     {
-        _ui = FindObjectOfType<UIController>();
+        _ui = FindObjectOfType<UIManager>();
     }
     
     public void IncreaseScore(int amount)

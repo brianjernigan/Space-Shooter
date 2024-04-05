@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class UIController : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
     [SerializeField] private TMP_Text _healthText;
     [SerializeField] private TMP_Text _scoreText;
