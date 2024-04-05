@@ -8,7 +8,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Search;
 using UnityEngine;
 
 public class ShipController : MonoBehaviour
@@ -43,19 +42,15 @@ public class ShipController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_ss.IsDead) return;
-        if (!_ss.IsStalled)
-        {
-            Move();
-        }
-        
+        Move();   
         HandleParticles();
         HandleThrusterAudio();
-
     }
 
     private void Move()
     {
+        if (_ss.IsStalled || _ss.IsDead) return;
+        
         var horizontalInput = Input.GetAxis("Horizontal");
 
         var movement = new Vector3(horizontalInput, 0, 0) * Speed;
@@ -67,6 +62,12 @@ public class ShipController : MonoBehaviour
 
     private void HandleParticles()
     {
+        if (_ss.IsDead)
+        {
+            _shipParticles.Stop();
+            return;
+        }
+        
         if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) && !_shipParticles.isEmitting && !_ss.IsStalled)
         {
             _shipParticles.Play();
@@ -79,6 +80,11 @@ public class ShipController : MonoBehaviour
 
     private void HandleThrusterAudio()
     {
+        if (_ss.IsDead)
+        {
+            _audio.Thrusters.Stop();
+        }
+        
         if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) && !_ss.IsStalled)
         {
             if (!_audio.Thrusters.isPlaying)
